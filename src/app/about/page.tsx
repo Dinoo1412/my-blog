@@ -42,7 +42,7 @@ export default async function AboutPage() {
         <ul>
           <li>本博客使用 <strong>Next.js 16</strong> + Tailwind CSS 构建</li>
           <li>文章使用 Markdown / MDX 格式编写</li>
-          <li>部署于 <strong>Vercel</strong>，自动 CI/CD</li>
+          <li>部署于 <strong>Cloudflare Workers</strong>，自动 CI/CD</li>
           <li>通过脚本定期同步 CSDN 文章</li>
         </ul>
         <h2>联系我</h2>

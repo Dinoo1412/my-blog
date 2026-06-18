@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="mt-16 border-t border-zinc-200 py-8 text-center text-sm text-zinc-400 dark:border-zinc-800">
           <p>
             Built with Next.js · 同步自{" "}
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-500">
+            <a href="https://github.com/Dinoo1412" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-500">
               GitHub
             </a>{" "}
             &amp;{" "}

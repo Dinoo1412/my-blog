@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dino's Blog
 
-## Getting Started
+个人技术博客，同步 GitHub 项目展示与 CSDN 文章，部署于 Cloudflare Workers。
 
-First, run the development server:
+## 技术栈
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 16** — App Router + 静态导出（Static Export）
+- **Tailwind CSS v4** — 样式
+- **gray-matter** — 解析 Markdown Front Matter
+- **react-markdown** — 渲染文章正文
+- **Cloudflare Workers** — 托管部署，国内可访问
+
+## 项目结构
+
+```
+├── content/
+│   ├── posts/          # 原创文章（Markdown）
+│   └── csdn/           # CSDN 同步文章（脚本自动生成）
+├── scripts/
+│   └── sync-csdn.js    # CSDN 爬虫同步脚本
+├── src/
+│   ├── app/            # Next.js App Router 页面
+│   ├── components/     # UI 组件
+│   └── lib/            # 工具函数（posts、github API）
+└── wrangler.toml       # Cloudflare Workers 配置
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 分支策略
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 分支 | 用途 |
+|------|------|
+| `main` | 生产分支，推送后自动触发 Cloudflare 部署 |
+| `dev` | 日常开发分支，功能完成后合并到 main |
+| `feature/*` | 新功能开发，从 dev 切出，完成后合并回 dev |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 本地开发
 
-## Learn More
+```bash
+# 安装依赖
+npm install
 
-To learn more about Next.js, take a look at the following resources:
+# 启动开发服务器
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+访问 [http://localhost:3000](http://localhost:3000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 环境变量
 
-## Deploy on Vercel
+在项目根目录创建 `.env.local`：
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+NEXT_PUBLIC_GITHUB_USERNAME=Dinoo1412
+GITHUB_TOKEN=your_github_token   # 可选，提高 API 频率限制
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 同步 CSDN 文章
+
+```bash
+npm run sync:csdn -- 你的CSDN用户名
+```
+
+脚本会将文章抓取后保存到 `content/csdn/`，然后正常提交推送即可上线。
+
+## 部署
+
+推送到 `main` 分支后，Cloudflare Workers 自动构建并部署。
+
+构建命令：`npm run build`  
+输出目录：`out`（静态导出）
+
+## 写新文章
+
+在 `content/posts/` 新建 `.md` 文件：
+
+```markdown
+---
+title: "文章标题"
+date: "2025-01-01"
+tags: ["标签1", "标签2"]
+summary: "文章摘要"
+---
+
+正文内容...
+```
+
+推送到 `main` 后自动上线。
