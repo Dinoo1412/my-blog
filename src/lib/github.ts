@@ -38,7 +38,6 @@ export async function getGitHubUser(): Promise<GitHubUser | null> {
   try {
     const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
       headers,
-      next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
     return res.json();
@@ -52,7 +51,7 @@ export async function getGitHubRepos(limit = 12): Promise<GitHubRepo[]> {
   try {
     const res = await fetch(
       `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&type=owner`,
-      { headers, next: { revalidate: 3600 } }
+      { headers }
     );
     if (!res.ok) return [];
     const repos: GitHubRepo[] = await res.json();
