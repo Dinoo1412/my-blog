@@ -96,6 +96,22 @@ export default async function PostPage({
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeSlug, rehypeHighlight]}
+          components={{
+            img: ({ src, alt }) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={typeof src === "string" ? src : undefined}
+                alt={alt || ""}
+                referrerPolicy="no-referrer"
+                loading="lazy"
+              />
+            ),
+            a: ({ href, children, ...props }) => (
+              <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+                {children}
+              </a>
+            ),
+          }}
         >
           {post.content}
         </ReactMarkdown>
