@@ -1,0 +1,40 @@
+name: Sync CSDN Articles
+
+on:
+  schedule:
+    # 每年 1 月 1 日和 7 月 1 日 00:00 UTC 自动运行（约每半年一次）
+    - cron: "0 0 1 1,7 *"
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run CSDN sync
+        run: node scripts/sync-csdn.js ${{ vars.CSDN_USERNAME || 'weixin_63110324' }}
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content/csdn
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto sync CSDN articles"
+            git push
+          else
+            echo "No new articles to sync."
+          fi
