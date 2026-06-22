@@ -29,8 +29,10 @@ function readPostsFromDir(dir: string, source: "local" | "csdn"): Post[] {
     const { data, content } = matter(raw);
     const stats = readingTime(content);
 
+    const rawSlug = source === "csdn" ? `csdn-${slug}` : slug;
+
     return {
-      slug: source === "csdn" ? `csdn-${slug}` : slug,
+      slug: encodeURIComponent(rawSlug),
       title: data.title || slug,
       date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
       summary: data.summary || data.description || content.slice(0, 120).replace(/[#*`]/g, "") + "...",
