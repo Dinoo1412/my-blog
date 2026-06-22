@@ -56,7 +56,9 @@ async function fetchArticleContent(url) {
   const $ = cheerio.load(res.data);
 
   const title = $("h1.title-article, h1").first().text().trim();
-  const dateStr = $("span.time").first().text().replace("于", "").trim();
+  const rawDate = $("span.time").first().text().replace("于", "").trim();
+  const dateMatch = rawDate.match(/\d{4}-\d{2}-\d{2}/);
+  const dateStr = dateMatch ? dateMatch[0] : rawDate;
   const tagsEls = $(".tag-link");
   const tags = [];
   tagsEls.each((_, el) => tags.push($(el).text().trim()));
@@ -119,8 +121,9 @@ function saveMarkdown(article, url) {
     return;
   }
 
-  const date = article.dateStr
-    ? new Date(article.dateStr).toISOString().slice(0, 10)
+  const parsed = article.dateStr ? new Date(article.dateStr) : null;
+  const date = parsed && !isNaN(parsed.getTime())
+    ? parsed.toISOString().slice(0, 10)
     : new Date().toISOString().slice(0, 10);
 
   const frontmatter = [
