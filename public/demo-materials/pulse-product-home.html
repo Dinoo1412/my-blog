@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse — 专注，从第一秒开始</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0b0a;
+      --bg-elevated: #161412;
+      --text: #f2ebe3;
+      --text-muted: #9a8f84;
+      --accent: #d4623a;
+      --accent-glow: rgba(212, 98, 58, 0.35);
+      --line: rgba(242, 235, 227, 0.08);
+      --font-display: "Syne", sans-serif;
+      --font-body: "Newsreader", Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Ambient glow */
+    .ambient {
+      position: fixed;
+      width: 60vw;
+      height: 60vw;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient--1 {
+      top: -20%;
+      right: -15%;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    }
+    .ambient--2 {
+      bottom: -30%;
+      left: -20%;
+      background: radial-gradient(circle, rgba(90, 70, 50, 0.2) 0%, transparent 70%);
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--line);
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 1.6rem;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .btn--primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px var(--accent-glow);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .btn--ghost:hover {
+      border-color: var(--text-muted);
+      background: var(--bg-elevated);
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: end;
+      padding: clamp(4rem, 10vw, 8rem) 0 clamp(5rem, 12vw, 9rem);
+      min-height: 85vh;
+    }
+
+    .hero-copy { max-width: 32rem; }
+
+    .eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2.75rem, 6vw, 4.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--text-muted);
+      display: block;
+      font-weight: 600;
+      font-size: 0.55em;
+      letter-spacing: -0.02em;
+      margin-top: 0.15em;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.7s 0.35s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: fadeUp 0.7s 0.45s ease both;
+    }
+
+    .hero-visual {
+      position: relative;
+      animation: fadeUp 0.9s 0.3s ease both;
+    }
+
+    .device-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .device-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .device-ring {
+      width: min(280px, 70vw);
+      aspect-ratio: 1;
+      margin: 0 auto 2rem;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .device-ring::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      border: 1px dashed var(--line);
+      animation: spin 24s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .timer-display {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 3.5rem;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+    .timer-display small {
+      display: block;
+      font-size: 0.35em;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    .device-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .float-tag {
+      position: absolute;
+      top: 1.5rem;
+      right: -0.5rem;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 0.75rem;
+      transform: rotate(3deg);
+    }
+
+    /* Features */
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      margin-bottom: 6rem;
+    }
+
+    .feature {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      transition: background 0.3s;
+    }
+    .feature:hover { background: var(--bg-elevated); }
+
+    .feature-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--line);
+      line-height: 1;
+      margin-bottom: 1.25rem;
+      transition: color 0.3s;
+    }
+    .feature:hover .feature-num { color: var(--accent); }
+
+    .feature h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .feature p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* CTA band */
+    .cta-band {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding: 3.5rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      margin-bottom: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-band::after {
+      content: "PULSE";
+      position: absolute;
+      right: -0.05em;
+      bottom: -0.15em;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(5rem, 15vw, 10rem);
+      color: transparent;
+      -webkit-text-stroke: 1px var(--line);
+      pointer-events: none;
+      line-height: 0.85;
+    }
+
+    .cta-band h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      letter-spacing: -0.02em;
+      max-width: 20ch;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-band .price {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-band .price strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-top: 0.25rem;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Footer */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 2rem 0 3rem;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--text); }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .hero-visual { order: -1; }
+      .features { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient ambient--1" aria-hidden="true"></div>
+  <div class="ambient ambient--2" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#">Pulse<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="#features">特性</a></li>
+        <li><a href="#buy">购买</a></li>
+        <li><a href="#">支持</a></li>
+      </ul>
+      <a class="btn btn--primary" href="#buy">立即预订</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">专注硬件 · 2026</p>
+        <h1>
+          把时间
+          <em>还给你自己</em>
+        </h1>
+        <p class="hero-desc">
+          Pulse 是一款桌面专注计时器：无通知、无订阅、无屏幕干扰。旋转设定时长，一声轻响，进入心流。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#buy">¥ 499 起订</a>
+          <a class="btn btn--ghost" href="#features">了解细节</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="device-card">
+          <span class="float-tag">新品</span>
+          <div class="device-ring">
+            <div class="timer-display">
+              25:00
+              <small>专注中</small>
+            </div>
+          </div>
+          <div class="device-meta">
+            <span>铝合金机身</span>
+            <span>续航 30 天</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="features">
+      <p class="section-label reveal">核心能力</p>
+      <div class="features">
+        <article class="feature reveal">
+          <div class="feature-num">01</div>
+          <h3>物理旋钮</h3>
+          <p>触觉反馈的阻尼旋钮，5 秒完成设定。比任何 App 都更快进入状态。</p>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-num">02</div>
+          <h3>环境光晕</h3>
+          <p>边缘微光随剩余时间由暖转冷，余光可感知进度，无需盯屏。</p>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-num">03</div>
+          <h3>离线优先</h3>
+          <p>内置番茄钟与自定义时段，不联网、不采集数据。专注本该如此简单。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="buy" class="cta-band reveal">
+      <div>
+        <h2>现在开始，每天夺回一小时。</h2>
+        <p class="price">
+          早鸟价
+          <strong>¥ 499</strong>
+        </p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn--primary" href="#">加入等候名单</a>
+        <a class="btn btn--ghost" href="#">查看规格 PDF</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Pulse Labs</span>
+      <span>
+        <a href="#">隐私</a>
+        ·
+        <a href="#">条款</a>
+        ·
+        <a href="#">联系</a>
+      </span>
+    </footer>
+  </div>
+
+  <script>
+    const reveals = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+    reveals.forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

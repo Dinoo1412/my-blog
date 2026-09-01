@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>墨痕 Inktrace — 为写作者而生的专注空间</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper: #f3ede4;
+      --paper-deep: #e8dfd2;
+      --ink: #1c1814;
+      --ink-soft: #4a433c;
+      --ink-muted: #7a7268;
+      --accent: #b84a2f;
+      --accent-glow: rgba(184, 74, 47, 0.18);
+      --line: rgba(28, 24, 20, 0.1);
+      --serif: "Cormorant Garamond", "Songti SC", "STSong", serif;
+      --sans: "Outfit", system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      font-weight: 300;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 48px);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    header.scrolled {
+      background: rgba(243, 237, 228, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(20px, 3vw, 40px);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 10px 22px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    .nav-cta:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      padding-top: 100px;
+      padding-bottom: 80px;
+    }
+
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 48px;
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: rise 0.8s ease forwards 0.1s;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 7vw, 5.2rem);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: rise 0.9s ease forwards 0.25s;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      max-width: 420px;
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: rise 0.9s ease forwards 0.4s;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      opacity: 0;
+      animation: rise 0.9s ease forwards 0.55s;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px var(--accent-glow);
+    }
+
+    .btn-ghost {
+      padding: 16px 24px;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--ink-muted);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .hero-visual {
+      position: relative;
+      margin-top: 48px;
+      opacity: 0;
+      animation: rise 1s ease forwards 0.65s;
+    }
+
+    @media (min-width: 900px) {
+      .hero-visual { margin-top: 0; }
+    }
+
+    .mock-window {
+      background: var(--paper-deep);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 24px 28px 32px;
+      box-shadow:
+        24px 24px 0 rgba(28, 24, 20, 0.04),
+        0 40px 80px rgba(28, 24, 20, 0.08);
+      transform: rotate(-1.5deg);
+      transition: transform 0.5s ease;
+    }
+
+    .mock-window:hover { transform: rotate(0deg) scale(1.01); }
+
+    .mock-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .mock-bar span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line);
+    }
+
+    .mock-bar span:first-child { background: var(--accent); opacity: 0.6; }
+
+    .mock-line {
+      height: 10px;
+      background: var(--line);
+      border-radius: 2px;
+      margin-bottom: 12px;
+    }
+
+    .mock-line.short { width: 62%; }
+    .mock-line.shorter { width: 38%; }
+
+    .mock-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    .mock-text {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin-top: 8px;
+    }
+
+    .float-tag {
+      position: absolute;
+      bottom: -16px;
+      right: -8px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 18px;
+      border-radius: 4px;
+    }
+
+    .features {
+      padding: 100px 0 120px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    .features h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 500;
+      max-width: 520px;
+      margin-bottom: 56px;
+      line-height: 1.2;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .feature-card {
+      background: var(--paper);
+      padding: 40px 36px;
+      transition: background 0.3s;
+    }
+
+    .feature-card:hover { background: var(--paper-deep); }
+
+    .feature-num {
+      font-family: var(--serif);
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: var(--accent);
+      opacity: 0.5;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+    }
+
+    .cta {
+      padding: 80px 0 100px;
+    }
+
+    .cta-inner {
+      position: relative;
+      padding: clamp(48px, 8vw, 72px);
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .cta-inner::after {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 50%;
+      height: 180%;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-inner h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 500;
+      max-width: 480px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-inner p {
+      color: rgba(243, 237, 228, 0.7);
+      max-width: 400px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-inner .btn-primary {
+      position: relative;
+      z-index: 1;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .cta-inner .btn-primary:hover {
+      background: #fff;
+    }
+
+    footer {
+      padding: 32px 0 48px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+    }
+
+    footer .logo { font-size: 1.2rem; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="header">
+    <nav class="wrap nav">
+      <a href="#" class="logo">墨痕 <span>Inktrace</span></a>
+      <ul class="nav-links">
+        <li><a href="#features">功能</a></li>
+        <li><a href="#pricing">定价</a></li>
+        <li><a href="#about">关于</a></li>
+      </ul>
+      <a href="#cta" class="nav-cta">免费试用</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">专注写作 · 零干扰</p>
+        <h1>把思绪<br />留在<em>纸上</em>的质感里</h1>
+        <p class="hero-desc">
+          墨痕为长文写作者设计：极简界面、沉浸式打字节奏、以及会记住你写作习惯的智能大纲——没有花哨，只有字与呼吸之间的空隙。
+        </p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn-primary">开始 14 天试用 →</a>
+          <a href="#features" class="btn-ghost">了解功能</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="mock-window">
+          <div class="mock-bar">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="mock-line"></div>
+          <div class="mock-line short"></div>
+          <div class="mock-line shorter"></div>
+          <p class="mock-text">
+            清晨六点，窗外有雾。我打开文档，写下第一句——<span class="mock-cursor"></span>
+          </p>
+        </div>
+        <span class="float-tag">专注模式已开启</span>
+      </div>
+    </section>
+
+    <section class="features wrap" id="features">
+      <p class="section-label">核心能力</p>
+      <h2>三件小事，<br />撑起一整天的写作</h2>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-num">01</div>
+          <h3>打字机节奏</h3>
+          <p>可调节的字间距与行高，配合轻微的按键反馈音效，让手指与思绪同步。</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-num">02</div>
+          <h3>大纲随写而生</h3>
+          <p>边写边提炼章节结构，侧边栏自动归纳标题，导出时一键生成目录。</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-num">03</div>
+          <h3>离线优先</h3>
+          <p>所有稿件本地加密存储，联网仅用于同步。断网时，写作从不停歇。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta wrap" id="cta">
+      <div class="cta-inner">
+        <h2>今天写下的第一段，<br />往往最重要。</h2>
+        <p>加入 12,000+ 写作者。无需信用卡，14 天完整功能体验。</p>
+        <a href="#" class="btn-primary">免费创建账户 →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <a href="#" class="logo">墨痕</a>
+    <p>© 2026 Inktrace. 演示页面，仅供设计参考。</p>
+  </footer>
+
+  <script>
+    const header = document.getElementById("header");
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 40);
+    }, { passive: true });
+  </script>
+</body>
+</html>

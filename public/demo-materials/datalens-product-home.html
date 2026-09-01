@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataLens — 一站式数据分析平台</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b1220;
+      --surface: #141c2e;
+      --surface-2: #1a2438;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-dim: #0891b2;
+      --border: rgba(148, 163, 184, 0.15);
+      --radius: 14px;
+      --max: 1120px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: rgba(11, 18, 32, 0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #6366f1);
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--bg);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.92rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #38bdf8);
+      color: #0b1220;
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.25);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 32px rgba(34, 211, 238, 0.4);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 88px 0 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(34, 211, 238, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      max-width: 720px;
+      margin: 0 auto 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    .hero-preview {
+      max-width: 880px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    .preview-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 18px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #f87171; }
+    .dot-y { background: #fbbf24; }
+    .dot-g { background: #34d399; }
+
+    .preview-body {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+      min-height: 220px;
+    }
+
+    .preview-sidebar {
+      background: var(--surface-2);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .preview-sidebar div {
+      height: 10px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .preview-sidebar div:first-child { width: 70%; background: rgba(34, 211, 238, 0.35); }
+    .preview-chart {
+      background: var(--surface-2);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dim));
+      opacity: 0.85;
+    }
+
+    .bar:nth-child(1) { height: 45%; }
+    .bar:nth-child(2) { height: 72%; }
+    .bar:nth-child(3) { height: 55%; }
+    .bar:nth-child(4) { height: 90%; }
+    .bar:nth-child(5) { height: 62%; }
+
+    /* Features */
+    .section {
+      padding: 72px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(34, 211, 238, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(34, 211, 238, 0.12);
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-item strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .stat-item span {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 64px 40px;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 48px;
+    }
+
+    .cta h2 {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 28px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 0 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    footer a:hover { color: var(--text); }
+
+    .footer-links { display: flex; gap: 24px; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .preview-body { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; gap: 32px; }
+      .hero { padding-top: 56px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="logo">
+        <span class="logo-mark">DL</span>
+        DataLens
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">功能</a></li>
+        <li><a href="#stats">数据</a></li>
+        <li><a href="#cta">定价</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost">登录</a>
+        <a href="#cta" class="btn btn-primary">免费试用</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="badge">全新 2.0 已发布</span>
+        <h1>让数据说话，<span>一眼看懂业务</span></h1>
+        <p>DataLens 将分散的数据源汇聚一处，用直观的仪表盘与智能洞察，帮助团队更快做出决策。</p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn btn-primary">立即开始 — 免费 14 天</a>
+          <a href="#features" class="btn btn-ghost">了解功能</a>
+        </div>
+        <div class="hero-preview" aria-hidden="true">
+          <div class="preview-bar">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+          </div>
+          <div class="preview-body">
+            <div class="preview-sidebar">
+              <div></div><div></div><div></div><div></div><div></div>
+            </div>
+            <div class="preview-chart">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-title">
+          <h2>为什么选择 DataLens</h2>
+          <p>从接入到洞察，全流程只需几分钟</p>
+        </div>
+        <div class="features">
+          <article class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>多源数据接入</h3>
+            <p>支持数据库、API、表格文件一键导入，自动识别字段类型并建立关联。</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>实时仪表盘</h3>
+            <p>拖拽式搭建看板，数据变更秒级刷新，大屏展示与移动端自适应。</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>企业级安全</h3>
+            <p>行级权限、审计日志与 SSO 集成，满足金融与政务场景的合规要求。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="stats">
+      <div class="container stats">
+        <div class="stat-item">
+          <strong>2,400+</strong>
+          <span>企业客户</span>
+        </div>
+        <div class="stat-item">
+          <strong>99.9%</strong>
+          <span>服务可用性</span>
+        </div>
+        <div class="stat-item">
+          <strong>5 分钟</strong>
+          <span>平均上手时间</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cta">
+      <div class="container">
+        <div class="cta">
+          <h2>准备好提升数据效率了吗？</h2>
+          <p>无需信用卡，注册即可体验完整功能。团队版支持无限协作成员。</p>
+          <a href="#" class="btn btn-primary">创建免费账户</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; width: 100%; gap: 16px;">
+      <span>© 2026 DataLens. 保留所有权利。</span>
+      <div class="footer-links">
+        <a href="#">隐私政策</a>
+        <a href="#">服务条款</a>
+        <a href="#">联系我们</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
