@@ -1,12 +1,18 @@
-# 演示资料模块：新增文件夹指南
+# 项目分享模块：新增项目文件夹指南
 
-演示资料页采用“文件夹驱动”设计。构建时会扫描：
+项目分享模块采用“文件夹驱动”设计。构建时会扫描：
 
 ```text
 public/demo-materials/collections/*/collection.json
 ```
 
-每个包含 `collection.json` 的一级文件夹会自动成为 `/demos` 页面中的一个资料分区，不需要修改 React 页面。
+每个包含 `collection.json` 的一级文件夹代表一个独立分享项目，并自动生成：
+
+- `/demos` 集合页中的一张项目卡片；
+- `/demos/<文件夹名>` 独立项目详情页；
+- 详情页内部的在线演示与资料下载入口。
+
+例如，`skill-design` 文件夹对应 `/demos/skill-design`。新增项目不需要修改 React 页面。
 
 ## 目录约定
 
@@ -33,7 +39,7 @@ public/demo-materials/collections/
 
 不要使用中文、空格或特殊符号作为文件夹名，以避免 Cloudflare 静态资源路径兼容问题。
 
-## 新增文件夹
+## 新增分享项目
 
 ### 1. 创建资料目录
 

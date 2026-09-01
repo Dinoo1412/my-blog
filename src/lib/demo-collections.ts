@@ -88,3 +88,8 @@ export function getDemoCollections(): DemoCollection[] {
     .filter((collection): collection is DemoCollection => Boolean(collection))
     .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "zh-CN"));
 }
+
+export function getDemoCollection(slug: string): DemoCollection | null {
+  if (!/^[a-z0-9-]+$/.test(slug)) return null;
+  return readCollection(slug);
+}
