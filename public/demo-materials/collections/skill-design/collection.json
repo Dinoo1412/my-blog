@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "title": "Skill 设计演示",
+  "description": "比较通用 Skill、自定义设计系统 Skill 与无 Skill 约束时的页面结果，并提供演示文稿和配套资料。",
+  "eyebrow": "Design systems & agent skills",
+  "accent": "emerald",
+  "order": 10,
+  "demos": [
+    { "title": "Pulse", "subtitle": "专注，从第一秒开始", "description": "带有编辑感排版与产品叙事节奏的专注设备首页。", "file": "pulse-product-home.html", "label": "产品首页", "accent": "orange" },
+    { "title": "DataLens", "subtitle": "一站式数据分析平台", "description": "围绕数据洞察、指标与转化路径构建的 SaaS 落地页。", "file": "datalens-product-home.html", "label": "数据产品", "accent": "blue" },
+    { "title": "曲尺 AI · 轻量版", "subtitle": "开放平台产品首页", "description": "基于自定义设计系统完成的紧凑型 AI 平台首页。", "file": "quchiai-simple-product-home.html", "label": "设计系统", "accent": "emerald" },
+    { "title": "墨痕 Inktrace", "subtitle": "使用通用 Frontend Skill", "description": "展示通用设计技能如何塑造更鲜明的写作产品气质。", "file": "examples/general-skill-inktrace.html", "label": "通用 Skill", "accent": "amber" },
+    { "title": "曲尺 AI · 完整版", "subtitle": "使用自定义 Design System Skill", "description": "按品牌令牌、组件和布局规范生成的完整产品页面。", "file": "examples/custom-skill-quchiai.html", "label": "自定义 Skill", "accent": "lime" },
+    { "title": "FlowNote", "subtitle": "未使用设计 Skill", "description": "作为对照组，观察无专用设计约束时的页面表现。", "file": "examples/without-skill-flownote.html", "label": "对照实验", "accent": "zinc" },
+    { "title": "曲尺 AI · 页面样例", "subtitle": "产品首页交付版本", "description": "可独立打开和演示的曲尺 AI 产品首页成果。", "file": "examples/quchiai-product-homepage.html", "label": "交付样例", "accent": "cyan" }
+  ],
+  "resources": [
+    { "title": "演示文稿", "detail": "PowerPoint · 4.5 MB", "file": "downloads/demo-slides.pptx", "kind": "presentation" },
+    { "title": "演讲逐字稿", "detail": "Word 文档", "file": "downloads/speech-script.docx", "kind": "document" },
+    { "title": "逐字稿 Markdown", "detail": "Markdown 文档", "file": "downloads/speech-script.md", "kind": "document" },
+    { "title": "Skill 资源汇总", "detail": "工具与资源索引", "file": "downloads/skill-resources.md", "kind": "skill" },
+    { "title": "完整演示资料包", "detail": "ZIP · 含全部原始文件", "file": "downloads/demo-materials.zip", "kind": "archive" }
+  ]
+}

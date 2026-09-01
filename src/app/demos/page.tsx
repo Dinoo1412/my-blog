@@ -4,109 +4,40 @@ import {
   Download,
   FileArchive,
   FileText,
+  FolderOpen,
   Presentation,
   Shapes,
   Sparkles,
 } from "lucide-react";
+import { getDemoCollections, type DemoAccent, type ResourceKind } from "@/lib/demo-collections";
 
 export const metadata: Metadata = {
   title: "演示资料",
   description: "页面设计演示、演讲资料与 Agent Skill 实践资源。",
 };
 
-const demos = [
-  {
-    title: "Pulse",
-    subtitle: "专注，从第一秒开始",
-    description: "带有编辑感排版与产品叙事节奏的专注设备首页。",
-    href: "/demo-materials/pulse-product-home.html",
-    accent: "from-orange-400 to-rose-500",
-    label: "产品首页",
-  },
-  {
-    title: "DataLens",
-    subtitle: "一站式数据分析平台",
-    description: "围绕数据洞察、指标与转化路径构建的 SaaS 落地页。",
-    href: "/demo-materials/datalens-product-home.html",
-    accent: "from-cyan-400 to-blue-600",
-    label: "数据产品",
-  },
-  {
-    title: "曲尺 AI · 轻量版",
-    subtitle: "开放平台产品首页",
-    description: "基于自定义设计系统完成的紧凑型 AI 平台首页。",
-    href: "/demo-materials/quchiai-simple-product-home.html",
-    accent: "from-emerald-400 to-teal-600",
-    label: "设计系统",
-  },
-  {
-    title: "墨痕 Inktrace",
-    subtitle: "使用通用 Frontend Skill",
-    description: "展示通用设计技能如何塑造更鲜明的写作产品气质。",
-    href: "/demo-materials/examples/general-skill-inktrace.html",
-    accent: "from-amber-300 to-yellow-600",
-    label: "通用 Skill",
-  },
-  {
-    title: "曲尺 AI · 完整版",
-    subtitle: "使用自定义 Design System Skill",
-    description: "按品牌令牌、组件和布局规范生成的完整产品页面。",
-    href: "/demo-materials/examples/custom-skill-quchiai.html",
-    accent: "from-lime-400 to-emerald-600",
-    label: "自定义 Skill",
-  },
-  {
-    title: "FlowNote",
-    subtitle: "未使用设计 Skill",
-    description: "作为对照组，观察无专用设计约束时的页面表现。",
-    href: "/demo-materials/examples/without-skill-flownote.html",
-    accent: "from-zinc-400 to-zinc-700",
-    label: "对照实验",
-  },
-  {
-    title: "曲尺 AI · 页面样例",
-    subtitle: "产品首页交付版本",
-    description: "可独立打开和演示的曲尺 AI 产品首页成果。",
-    href: "/demo-materials/examples/quchiai-product-homepage.html",
-    accent: "from-teal-400 to-cyan-700",
-    label: "交付样例",
-  },
-];
+const accentClasses: Record<DemoAccent, string> = {
+  amber: "from-amber-300 to-yellow-600",
+  blue: "from-cyan-400 to-blue-600",
+  cyan: "from-teal-400 to-cyan-700",
+  emerald: "from-emerald-400 to-teal-600",
+  lime: "from-lime-400 to-emerald-600",
+  orange: "from-orange-400 to-rose-500",
+  zinc: "from-zinc-400 to-zinc-700",
+};
 
-const resources = [
-  {
-    title: "演示文稿",
-    detail: "PowerPoint · 4.5 MB",
-    href: "/demo-materials/downloads/demo-slides.pptx",
-    icon: Presentation,
-  },
-  {
-    title: "演讲逐字稿",
-    detail: "Word 文档",
-    href: "/demo-materials/downloads/speech-script.docx",
-    icon: FileText,
-  },
-  {
-    title: "逐字稿 Markdown",
-    detail: "Markdown 文档",
-    href: "/demo-materials/downloads/speech-script.md",
-    icon: FileText,
-  },
-  {
-    title: "Skill 资源汇总",
-    detail: "工具与资源索引",
-    href: "/demo-materials/downloads/skill-resources.md",
-    icon: Shapes,
-  },
-  {
-    title: "完整演示资料包",
-    detail: "ZIP · 含全部原始文件",
-    href: "/demo-materials/downloads/demo-materials.zip",
-    icon: FileArchive,
-  },
-];
+const resourceIcons: Record<ResourceKind, typeof FileText> = {
+  archive: FileArchive,
+  document: FileText,
+  presentation: Presentation,
+  skill: Shapes,
+};
 
 export default function DemosPage() {
+  const collections = getDemoCollections();
+  const demoCount = collections.reduce((total, collection) => total + collection.demos.length, 0);
+  const resourceCount = collections.reduce((total, collection) => total + collection.resources.length, 0);
+
   return (
     <div className="pb-8">
       <section className="relative overflow-hidden rounded-[2rem] border border-zinc-200 bg-zinc-950 px-6 py-12 text-white shadow-2xl shadow-zinc-950/10 sm:px-10 sm:py-16 dark:border-zinc-800">
@@ -115,90 +46,118 @@ export default function DemosPage() {
         <div className="relative max-w-2xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs tracking-[0.18em] text-zinc-300 uppercase">
             <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
-            Demo archive · 2026
+            Demo archive · {collections.length} collections
           </div>
           <h1 className="text-4xl font-black tracking-tight sm:text-6xl">
-            设计不是描述，
-            <span className="text-emerald-300">是可以打开的结果。</span>
+            每个文件夹，
+            <span className="text-emerald-300">都是一间展厅。</span>
           </h1>
           <p className="mt-6 max-w-xl text-base leading-7 text-zinc-300 sm:text-lg">
-            收录产品首页、Skill 对照实验、演示文稿与逐字稿。在线查看页面结果，或下载完整资料继续研究。
+            资料按主题文件夹持续扩展。现在收录 {demoCount} 个在线案例和 {resourceCount} 份配套资料。
           </p>
         </div>
       </section>
 
-      <section className="mt-14">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-emerald-600 uppercase dark:text-emerald-400">
-              Live demos
-            </p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">在线页面演示</h2>
-          </div>
-          <span className="font-mono text-sm text-zinc-400">07 CASES</span>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          {demos.map((demo, index) => (
+      {collections.length > 1 && (
+        <nav className="mt-8 flex gap-2 overflow-x-auto pb-2" aria-label="资料文件夹">
+          {collections.map((collection, index) => (
             <a
-              key={demo.href}
-              href={demo.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-xl hover:shadow-zinc-900/10 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+              key={collection.slug}
+              href={`#${collection.slug}`}
+              className="flex shrink-0 items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-600 transition hover:border-emerald-300 hover:text-emerald-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
             >
-              <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${demo.accent}`} />
-              <div className="mb-8 flex items-start justify-between">
-                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                  {demo.label}
-                </span>
-                <span className="font-mono text-xs text-zinc-300 dark:text-zinc-600">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{demo.title}</h3>
-              <p className="mt-1 text-sm font-medium text-zinc-500">{demo.subtitle}</p>
-              <p className="mt-4 text-sm leading-6 text-zinc-500 dark:text-zinc-400">{demo.description}</p>
-              <div className="mt-6 flex items-center gap-1 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                打开演示
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </div>
+              <FolderOpen className="h-4 w-4" />
+              {String(index + 1).padStart(2, "0")} · {collection.title}
             </a>
           ))}
-        </div>
-      </section>
+        </nav>
+      )}
 
-      <section className="mt-16">
-        <div className="mb-6">
-          <p className="text-xs font-semibold tracking-[0.2em] text-emerald-600 uppercase dark:text-emerald-400">
-            Resources
-          </p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">演示资料下载</h2>
-        </div>
+      {collections.map((collection, collectionIndex) => (
+        <section
+          id={collection.slug}
+          key={collection.slug}
+          className="mt-16 scroll-mt-24 border-t border-zinc-200 pt-10 first:border-t-0 first:pt-0 dark:border-zinc-800"
+        >
+          <div className="mb-8 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.2em] text-emerald-600 uppercase dark:text-emerald-400">
+                Collection {String(collectionIndex + 1).padStart(2, "0")} · {collection.eyebrow}
+              </p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">{collection.title}</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                {collection.description}
+              </p>
+            </div>
+            <div className="font-mono text-xs text-zinc-400">
+              {collection.demos.length} DEMOS / {collection.resources.length} FILES
+            </div>
+          </div>
 
-        <div className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
-          {resources.map((resource) => {
-            const Icon = resource.icon;
-            return (
-              <a
-                key={resource.href}
-                href={resource.href}
-                download
-                className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/70"
-              >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-semibold text-zinc-900 dark:text-white">{resource.title}</span>
-                  <span className="mt-0.5 block text-xs text-zinc-400">{resource.detail}</span>
-                </span>
-                <Download className="h-4 w-4 text-zinc-300 transition-colors group-hover:text-emerald-500" />
-              </a>
-            );
-          })}
+          {collection.demos.length > 0 && (
+            <div className="grid gap-4 md:grid-cols-2">
+              {collection.demos.map((demo, index) => (
+                <a
+                  key={demo.href}
+                  href={demo.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-xl hover:shadow-zinc-900/10 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+                >
+                  <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accentClasses[demo.accent]}`} />
+                  <div className="mb-8 flex items-start justify-between">
+                    <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                      {demo.label}
+                    </span>
+                    <span className="font-mono text-xs text-zinc-300 dark:text-zinc-600">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{demo.title}</h3>
+                  <p className="mt-1 text-sm font-medium text-zinc-500">{demo.subtitle}</p>
+                  <p className="mt-4 text-sm leading-6 text-zinc-500 dark:text-zinc-400">{demo.description}</p>
+                  <div className="mt-6 flex items-center gap-1 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                    打开演示
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+
+          {collection.resources.length > 0 && (
+            <div className="mt-8 divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
+              {collection.resources.map((resource) => {
+                const Icon = resourceIcons[resource.kind];
+                return (
+                  <a
+                    key={resource.href}
+                    href={resource.href}
+                    download
+                    className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/70"
+                  >
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold text-zinc-900 dark:text-white">{resource.title}</span>
+                      <span className="mt-0.5 block text-xs text-zinc-400">{resource.detail}</span>
+                    </span>
+                    <Download className="h-4 w-4 text-zinc-300 transition-colors group-hover:text-emerald-500" />
+                  </a>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      ))}
+
+      {collections.length === 0 && (
+        <div className="mt-12 rounded-2xl border border-dashed border-zinc-300 p-12 text-center dark:border-zinc-700">
+          <FolderOpen className="mx-auto h-8 w-8 text-zinc-300" />
+          <p className="mt-4 font-medium">还没有资料文件夹</p>
         </div>
-      </section>
+      )}
     </div>
   );
 }
