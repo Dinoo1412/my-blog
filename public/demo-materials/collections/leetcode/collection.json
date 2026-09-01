@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "title": "LeetCode 学习笔记",
+  "description": "算法基础、现代 C++、开发工具与工程实践的个人学习资料集合。敏感账号文件已从公开版本中排除。",
+  "eyebrow": "Algorithms & engineering notes",
+  "accent": "blue",
+  "order": 20,
+  "demos": [],
+  "resources": [
+    { "title": "常用学习链接", "detail": "Markdown · 学习路线与参考资料", "file": "notes/learning-links.md", "kind": "document" },
+    { "title": "哈希表", "detail": "Markdown · 数据结构笔记", "file": "notes/hash-table.md", "kind": "document" },
+    { "title": "前缀和", "detail": "Markdown · 算法原理与示例", "file": "notes/prefix-sum.md", "kind": "document" },
+    { "title": "新标准 C++", "detail": "Markdown · C++11 语法笔记", "file": "notes/modern-cpp.md", "kind": "document" },
+    { "title": "循环", "detail": "Markdown · 循环结构与用法", "file": "notes/loops.md", "kind": "document" },
+    { "title": "数据库设计", "detail": "Markdown · CoPaw 数据库设计文档", "file": "notes/database-design.md", "kind": "document" },
+    { "title": "Git 使用文档", "detail": "Markdown · 多账号配置与常用操作", "file": "notes/git-guide.md", "kind": "document" },
+    { "title": "Git 提交规范", "detail": "Markdown · 提交信息约定", "file": "notes/git-commit-convention.md", "kind": "document" },
+    { "title": "Typora 教程", "detail": "Markdown · 编辑器使用笔记", "file": "notes/typora-guide.md", "kind": "document" },
+    { "title": "GAN 示例代码", "detail": "Python · 生成对抗网络示例", "file": "code/gan.py", "kind": "document" },
+    { "title": "LeetCode 完整资料包", "detail": "ZIP · 不含账密文件", "file": "downloads/leetcode-materials.zip", "kind": "archive" }
+  ]
+}
