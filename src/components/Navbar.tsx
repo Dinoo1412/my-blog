@@ -26,13 +26,16 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const isActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
-      <nav className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 font-bold text-zinc-900 dark:text-white">
-          <Code2 className="h-5 w-5 text-indigo-500" />
-          <span>Dino&apos;s Blog</span>
+    <header className="sticky top-0 z-50 border-b border-blue-100/80 bg-white/75 shadow-[0_1px_20px_rgba(37,99,235,0.04)] backdrop-blur-xl dark:border-blue-900/60 dark:bg-[#061225]/80">
+      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
+        <Link href="/" className="group flex items-center gap-2.5 font-black tracking-tight text-slate-950 dark:text-white">
+          <span className="grid h-8 w-8 place-items-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 transition-transform group-hover:-rotate-6">
+            <Code2 className="h-4.5 w-4.5" />
+          </span>
+          <span>Dino&apos;s <span className="text-blue-600 dark:text-blue-400">Blog</span></span>
         </Link>
 
         {/* Desktop nav */}
@@ -41,10 +44,10 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                pathname === link.href
-                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400"
-                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+              className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-all ${
+                isActive(link.href)
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                  : "text-slate-500 hover:bg-blue-50 hover:text-blue-700 dark:text-slate-300 dark:hover:bg-blue-950 dark:hover:text-blue-300"
               }`}
             >
               {link.label}
@@ -55,7 +58,7 @@ export default function Navbar() {
               href={`https://github.com/${GITHUB_USERNAME}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 rounded-md p-1.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+              className="ml-2 rounded-full border border-blue-100 bg-white p-2 text-slate-500 transition hover:border-blue-300 hover:text-blue-700 dark:border-blue-900 dark:bg-blue-950/40 dark:text-slate-300"
             >
               <GithubIcon className="h-4 w-4" />
             </a>
@@ -64,7 +67,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="sm:hidden rounded-md p-1.5 text-zinc-500"
+          className="rounded-xl border border-blue-100 bg-white p-2 text-blue-700 shadow-sm dark:border-blue-900 dark:bg-blue-950 sm:hidden"
           onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -73,16 +76,16 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800 sm:hidden">
+        <div className="border-t border-blue-100 bg-white/95 px-4 py-3 dark:border-blue-900 dark:bg-[#061225]/95 sm:hidden">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className={`block rounded-md px-3 py-2 text-sm font-medium ${
-                pathname === link.href
-                  ? "text-indigo-600 dark:text-indigo-400"
-                  : "text-zinc-600 dark:text-zinc-400"
+              className={`block rounded-xl px-3 py-2.5 text-sm font-semibold ${
+                isActive(link.href)
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-600 dark:text-slate-300"
               }`}
             >
               {link.label}

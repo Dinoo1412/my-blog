@@ -4,7 +4,7 @@ import { getAllPosts } from "@/lib/posts";
 import { getGitHubUser, getGitHubRepos } from "@/lib/github";
 import PostCard from "@/components/PostCard";
 import RepoCard from "@/components/RepoCard";
-import { BookOpen, ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen, Code2, Layers3, Sparkles } from "lucide-react";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -15,116 +15,96 @@ function GithubIcon({ className }: { className?: string }) {
 }
 
 export default async function HomePage() {
-  const [posts, user, repos] = await Promise.all([
-    getAllPosts(),
-    getGitHubUser(),
-    getGitHubRepos(6),
-  ]);
-
+  const [posts, user, repos] = await Promise.all([getAllPosts(), getGitHubUser(), getGitHubRepos(6)]);
   const recentPosts = posts.slice(0, 6);
 
   return (
-    <div className="space-y-16">
-      {/* Hero */}
-      <section className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-        {user?.avatar_url && (
-          <Image
-            src={user.avatar_url}
-            alt={user.name || user.login}
-            width={96}
-            height={96}
-            className="rounded-full border-4 border-white shadow-md dark:border-zinc-800"
-          />
-        )}
-        <div>
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-            {user?.name || "Dino"}
-          </h1>
-          <p className="mt-1 text-zinc-500 dark:text-zinc-400">
-            {user?.bio || "热爱编程，记录技术思考与代码实践"}
-          </p>
-          <div className="mt-3 flex gap-3">
-            {user && (
-              <a
-                href={user.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-              >
-                <GithubIcon className="h-4 w-4" />
-                GitHub
-              </a>
-            )}
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium text-zinc-700 hover:border-indigo-400 hover:text-indigo-600 dark:border-zinc-700 dark:text-zinc-300"
-            >
-              <BookOpen className="h-4 w-4" />
-              阅读文章
-            </Link>
+    <div className="space-y-20">
+      <section className="relative overflow-hidden rounded-[2.25rem] bg-[#071b3a] px-6 py-10 text-white shadow-2xl shadow-blue-950/20 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(56,189,248,0.35),transparent_26rem)]" />
+        <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full border-[54px] border-blue-400/10" />
+        <div className="absolute right-8 top-7 font-mono text-xs tracking-[0.28em] text-blue-200/55">BUILD · WRITE · SHARE</div>
+
+        <div className="relative grid gap-10 lg:grid-cols-[1fr_280px] lg:items-end">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-300/20 bg-blue-300/10 px-3 py-1.5 text-xs font-semibold tracking-[0.18em] text-blue-200 uppercase">
+              <Sparkles className="h-3.5 w-3.5" />
+              Developer notes & experiments
+            </div>
+            <h1 className="max-w-2xl text-4xl font-black leading-[1.08] tracking-[-0.04em] sm:text-6xl">
+              把代码写进现实，
+              <span className="text-sky-300">把过程留在这里。</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-7 text-blue-100/70 sm:text-lg">
+              {user?.bio || "记录技术思考、工程实践与持续生长的项目。"}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {user && (
+                <a href={user.html_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition hover:-translate-y-0.5 hover:bg-blue-400">
+                  <GithubIcon className="h-4 w-4" />
+                  GitHub
+                </a>
+              )}
+              <Link href="/blog" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+                <BookOpen className="h-4 w-4" />
+                阅读文章
+              </Link>
+              <Link href="/demos" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+                <Layers3 className="h-4 w-4" />
+                项目分享
+              </Link>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/15 bg-white/8 p-5 backdrop-blur-md">
+            <div className="flex items-center gap-4">
+              {user?.avatar_url ? (
+                <Image src={user.avatar_url} alt={user.name || user.login} width={72} height={72} className="rounded-2xl border border-white/20 shadow-xl" />
+              ) : (
+                <span className="grid h-[72px] w-[72px] place-items-center rounded-2xl bg-blue-500"><Code2 /></span>
+              )}
+              <div>
+                <p className="text-xs font-medium tracking-wider text-blue-200/60 uppercase">Profile</p>
+                <h2 className="mt-1 text-xl font-black">{user?.name || "Dino"}</h2>
+                <p className="text-sm text-blue-100/60">@{user?.login || "Dinoo1412"}</p>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-3 gap-2 border-t border-white/10 pt-5 text-center">
+              <div><strong className="block text-xl text-sky-300">{posts.length}</strong><span className="text-[10px] text-blue-100/50">POSTS</span></div>
+              <div><strong className="block text-xl text-sky-300">{user?.public_repos || repos.length}</strong><span className="text-[10px] text-blue-100/50">REPOS</span></div>
+              <div><strong className="block text-xl text-sky-300">{user?.followers || 0}</strong><span className="text-[10px] text-blue-100/50">FOLLOWERS</span></div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Recent Posts */}
       {recentPosts.length > 0 && (
         <section>
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white">最新文章</h2>
-            <Link
-              href="/blog"
-              className="flex items-center gap-1 text-sm text-indigo-600 hover:underline dark:text-indigo-400"
-            >
-              全部文章 <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {recentPosts.map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
-          </div>
+          <SectionHeading eyebrow="Latest writing" title="最新文章" href="/blog" linkLabel="全部文章" />
+          <div className="grid gap-5 sm:grid-cols-2">{recentPosts.map((post) => <PostCard key={post.slug} post={post} />)}</div>
         </section>
       )}
 
-      {/* GitHub Projects */}
       {repos.length > 0 && (
         <section>
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white">开源项目</h2>
-            <Link
-              href="/projects"
-              className="flex items-center gap-1 text-sm text-indigo-600 hover:underline dark:text-indigo-400"
-            >
-              全部项目 <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {repos.map((repo) => (
-              <RepoCard key={repo.id} repo={repo} />
-            ))}
-          </div>
+          <SectionHeading eyebrow="Open source" title="开源项目" href="/projects" linkLabel="全部项目" />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}</div>
         </section>
       )}
+    </div>
+  );
+}
 
-      {/* Stats */}
-      {user && (
-        <section className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="grid grid-cols-3 divide-x divide-zinc-200 text-center dark:divide-zinc-800">
-            <div className="px-4">
-              <div className="text-2xl font-bold text-indigo-600">{posts.length}</div>
-              <div className="text-sm text-zinc-500">篇文章</div>
-            </div>
-            <div className="px-4">
-              <div className="text-2xl font-bold text-indigo-600">{user.public_repos}</div>
-              <div className="text-sm text-zinc-500">个仓库</div>
-            </div>
-            <div className="px-4">
-              <div className="text-2xl font-bold text-indigo-600">{user.followers}</div>
-              <div className="text-sm text-zinc-500">位关注者</div>
-            </div>
-          </div>
-        </section>
-      )}
+function SectionHeading({ eyebrow, title, href, linkLabel }: { eyebrow: string; title: string; href: string; linkLabel: string }) {
+  return (
+    <div className="mb-7 flex items-end justify-between gap-4">
+      <div>
+        <p className="font-mono text-xs font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">{eyebrow}</p>
+        <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white">{title}</h2>
+      </div>
+      <Link href={href} className="group flex items-center gap-1.5 text-sm font-bold text-blue-600 dark:text-blue-400">
+        {linkLabel}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </Link>
     </div>
   );
 }

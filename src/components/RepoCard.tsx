@@ -9,16 +9,17 @@ export default function RepoCard({ repo }: { repo: GitHubRepo }) {
       href={repo.html_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex flex-col rounded-xl border border-zinc-200 bg-white p-5 transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white/85 p-5 shadow-sm backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/8 dark:border-blue-900/70 dark:bg-[#0a1d38]/85"
     >
+      <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-100/70 transition-transform duration-500 group-hover:scale-125 dark:bg-blue-900/30" />
       <div className="mb-1 flex items-start justify-between gap-2">
-        <h3 className="font-semibold text-zinc-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-400">
+        <h3 className="relative font-bold text-slate-900 group-hover:text-blue-700 dark:text-white dark:group-hover:text-blue-300">
           {repo.name}
         </h3>
-        <ExternalLink className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
+        <ExternalLink className="relative mt-0.5 h-4 w-4 shrink-0 text-blue-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-600" />
       </div>
 
-      <p className="mb-3 line-clamp-2 flex-1 text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="relative mb-4 line-clamp-2 flex-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
         {repo.description || "No description"}
       </p>
 
@@ -27,7 +28,7 @@ export default function RepoCard({ repo }: { repo: GitHubRepo }) {
           {repo.topics.slice(0, 3).map((t) => (
             <span
               key={t}
-              className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400"
+              className="rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-600 dark:bg-blue-950 dark:text-blue-300"
             >
               {t}
             </span>
@@ -35,7 +36,7 @@ export default function RepoCard({ repo }: { repo: GitHubRepo }) {
         </div>
       )}
 
-      <div className="flex items-center gap-4 text-xs text-zinc-400">
+      <div className="relative flex items-center gap-4 border-t border-blue-50 pt-3 text-xs text-slate-400 dark:border-blue-900/50">
         {langColor && (
           <span className="flex items-center gap-1">
             <span

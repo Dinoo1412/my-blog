@@ -2,8 +2,10 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6faff;
+  --foreground: #10233f;
+  --surface: rgba(255, 255, 255, 0.82);
+  --line: rgba(37, 99, 235, 0.12);
 }
 
 @theme inline {
@@ -15,13 +17,37 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #061225;
+    --foreground: #e7f1ff;
+    --surface: rgba(9, 28, 54, 0.82);
+    --line: rgba(96, 165, 250, 0.15);
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 12% 4%, rgba(59, 130, 246, 0.14), transparent 28rem),
+    radial-gradient(circle at 88% 24%, rgba(14, 165, 233, 0.1), transparent 24rem),
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: #2563eb;
+  color: white;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
 }
