@@ -1,60 +1,17 @@
 import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Post } from "@/lib/posts";
-import { Calendar, Clock, ExternalLink } from "lucide-react";
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post, featured = false }: { post: Post; featured?: boolean }) {
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-blue-100 bg-white/85 p-5 shadow-sm backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/8 dark:border-blue-900/70 dark:bg-[#0a1d38]/85">
-      <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-400 to-cyan-400 opacity-0 transition-opacity group-hover:opacity-100" />
-      <div className="mb-3 flex items-center gap-2 text-xs text-slate-400">
-        <Calendar className="h-3.5 w-3.5" />
-        <time>{new Date(post.date).toLocaleDateString("zh-CN")}</time>
-        <span>·</span>
-        <Clock className="h-3.5 w-3.5" />
-        <span>{post.readingTime}</span>
-        {post.source === "csdn" && (
-          <>
-            <span>·</span>
-            <span className="rounded bg-red-50 px-1.5 py-0.5 text-xs font-medium text-red-600 dark:bg-red-950 dark:text-red-400">
-              CSDN
-            </span>
-          </>
-        )}
-      </div>
-
-      <Link href={`/blog/${post.slug}`}>
-        <h2 className="mb-2 text-lg font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-700 dark:text-white dark:group-hover:text-blue-300">
-          {post.title}
-        </h2>
+    <article className={`group relative overflow-hidden p-6 transition-colors ${featured ? "rounded-[1.5rem] bg-[#788b99] text-white shadow-lg shadow-[#35434a]/10 md:row-span-2" : "border-b border-stone-300 before:absolute before:inset-y-5 before:left-0 before:w-0.5 before:origin-top before:scale-y-0 before:bg-[#788b99] before:transition-transform hover:before:scale-y-100 dark:border-stone-700"}`}>
+      <div className={`flex items-center gap-2 text-xs ${featured ? "text-white/75" : "text-slate-500"}`}><time>{new Date(post.date).toLocaleDateString("zh-CN")}</time><span>·</span><span>{post.readingTime}</span>{post.source === "csdn" && <span className="ml-auto">CSDN</span>}</div>
+      <Link href={`/blog/${post.slug}`} className="mt-8 block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#788b99]">
+        <h2 className={`font-semibold leading-snug ${featured ? "text-2xl text-white sm:text-3xl" : "text-xl text-stone-800 group-hover:text-[#637986] dark:text-stone-100"}`}>{post.title}</h2>
+        <p className={`mt-3 line-clamp-3 text-sm leading-6 ${featured ? "text-white/75" : "text-slate-600 dark:text-slate-400"}`}>{post.summary}</p>
+        <span className={`mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-medium ${featured ? "text-white" : "text-[#637986] dark:text-[#aebdc5]"}`}>阅读全文 <ArrowRight className="h-4 w-4" /></span>
       </Link>
-
-      <p className="mb-4 line-clamp-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-        {post.summary}
-      </p>
-
-      <div className="flex items-center justify-between">
-        <div className="flex flex-wrap gap-1">
-          {post.tags.slice(0, 3).map((tag) => (
-            <Link
-              key={tag}
-              href={`/blog?tag=${tag}`}
-              className="rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-600 transition hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300"
-            >
-              #{tag}
-            </Link>
-          ))}
-        </div>
-        {post.csdnUrl && (
-          <a
-            href={post.csdnUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs text-slate-400 hover:text-blue-600"
-          >
-            原文 <ExternalLink className="h-3 w-3" />
-          </a>
-        )}
-      </div>
+      {!featured && post.csdnUrl && <a href={post.csdnUrl} target="_blank" rel="noopener noreferrer" aria-label="查看 CSDN 原文" className="absolute bottom-6 right-6 grid h-11 w-11 place-items-center text-stone-400 hover:text-[#637986]"><ArrowUpRight className="h-4 w-4" /></a>}
     </article>
   );
 }

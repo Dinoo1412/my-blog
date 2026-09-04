@@ -1,4 +1,4 @@
-# Dino's Blog
+# Jay's Blog
 
 个人技术博客，同步 GitHub 项目展示与 CSDN 文章，部署于 Cloudflare Workers。
 

@@ -35,20 +35,20 @@ export default async function PostPage({
   if (!post) notFound();
 
   return (
-    <article className="mx-auto max-w-3xl rounded-[2rem] border border-blue-100 bg-white/85 px-5 py-7 shadow-xl shadow-blue-900/5 backdrop-blur dark:border-blue-900/70 dark:bg-[#0a1d38]/85 sm:px-10 sm:py-10">
+    <article className="article-sheet mx-auto max-w-3xl px-5 py-7 sm:px-10 sm:py-10">
       {/* Back */}
-      <Link href="/blog" className="mb-7 inline-flex items-center gap-1 text-sm font-semibold text-slate-400 hover:text-blue-600">
+      <Link href="/blog" className="mb-7 inline-flex items-center gap-1 text-sm font-semibold text-stone-400 hover:text-[#637986]">
         ← 返回文章列表
       </Link>
 
       {/* Header */}
-      <header className="mb-8">
+      <header className="article-heading mb-8">
         <div className="mb-3 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
             <Link
               key={tag}
               href={`/blog?tag=${tag}`}
-              className="flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs text-blue-600 dark:bg-blue-950 dark:text-blue-300"
+              className="flex items-center gap-1 rounded-full bg-[#dfe3e1] px-2.5 py-0.5 text-xs text-[#637986] dark:bg-[#3a4443] dark:text-[#aebdc5]"
             >
               <Tag className="h-3 w-3" />
               {tag}
@@ -61,11 +61,11 @@ export default async function PostPage({
           )}
         </div>
 
-        <h1 className="mb-4 text-3xl font-black leading-tight tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+        <h1 className="mb-4 text-3xl font-semibold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-4xl">
           {post.title}
         </h1>
 
-        <div className="flex flex-wrap items-center gap-4 border-b border-blue-100 pb-7 text-sm text-slate-400 dark:border-blue-900/60">
+        <div className="flex flex-wrap items-center gap-4 border-b border-stone-300 pb-7 text-sm text-stone-400 dark:border-stone-700">
           <span className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />
             {new Date(post.date).toLocaleDateString("zh-CN", {
@@ -83,7 +83,7 @@ export default async function PostPage({
               href={post.csdnUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-blue-600"
+              className="flex items-center gap-1 hover:text-[#637986]"
             >
               查看 CSDN 原文 <ExternalLink className="h-3.5 w-3.5" />
             </a>
@@ -92,7 +92,7 @@ export default async function PostPage({
       </header>
 
       {/* Content */}
-      <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-black prose-a:text-blue-600 prose-code:before:content-none prose-code:after:content-none prose-img:rounded-2xl prose-img:border prose-img:border-blue-100 prose-img:shadow-lg">
+      <div className="article-content prose prose-stone max-w-none dark:prose-invert prose-headings:font-semibold prose-a:text-[#637986] prose-code:before:content-none prose-code:after:content-none prose-img:rounded-xl prose-img:border prose-img:border-stone-300">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeSlug, rehypeHighlight]}
