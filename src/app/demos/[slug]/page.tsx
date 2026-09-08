@@ -94,7 +94,7 @@ export default async function DemoCollectionPage({
                 href={demo.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="folder-sheet group mt-3 p-6 transition duration-200 hover:-translate-y-1 hover:shadow-[8px_8px_0_#d9ded8] dark:hover:shadow-[8px_8px_0_#35403f]"
+                className="folder-sheet group mt-3 block h-[calc(100%-0.75rem)] p-6 transition duration-200 hover:-translate-y-1 hover:shadow-[8px_8px_0_#d9ded8] dark:hover:shadow-[8px_8px_0_#35403f]"
               >
                 <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accentClasses[demo.accent]}`} />
                 <div className="mb-8 flex items-start justify-between">

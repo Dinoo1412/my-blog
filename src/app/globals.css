@@ -80,6 +80,43 @@ body {
 
 @keyframes cursor-ink { from { opacity: .85; transform: scaleX(.2) rotate(-18deg); } 45% { opacity: .7; transform: scaleX(1) rotate(-18deg); } to { opacity: 0; transform: translateY(5px) scaleX(1) rotate(-18deg); } }
 
+.mascot { position: fixed; z-index: 70; right: 18px; bottom: 14px; width: 190px; user-select: none; transition: filter 180ms ease; }
+.mascot-character { position: relative; display: block; width: 100%; border: 0; background: transparent; padding: 0; touch-action: none; cursor: grab; filter: drop-shadow(0 12px 14px rgba(53, 67, 74, .13)); transition: filter 180ms ease; }
+.mascot-character:active { cursor: grabbing; filter: drop-shadow(0 7px 8px rgba(53, 67, 74, .18)); }
+.mascot-stage { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; overflow: visible; }
+.mascot-stage img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.mascot-base { position: relative; z-index: 0; }
+.mascot-detail { position: absolute; inset: 0; }
+.mascot-detail { z-index: 1; }
+.mascot-ears { clip-path: polygon(17% 0, 80% 0, 72% 29%, 28% 29%); transform-origin: 50% 27%; animation: mascot-ear-twitch 7.4s ease-in-out infinite; }
+.mascot-fringe { clip-path: polygon(28% 17%, 72% 17%, 68% 52%, 31% 52%); transform-origin: 50% 22%; animation: mascot-fringe-soften 4.6s ease-in-out infinite; }
+.mascot-tail { clip-path: polygon(78% 51%, 100% 48%, 100% 90%, 79% 88%); transform-origin: 79% 79%; animation: mascot-tail-wag 3.8s ease-in-out infinite; }
+.mascot-note { position: absolute; right: 148px; bottom: 122px; width: 208px; padding: 15px 30px 15px 16px; border: 1px solid rgba(120, 139, 153, .4); border-radius: 16px 16px 4px 16px; background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: 0 12px 35px rgba(53, 67, 74, .1); backdrop-filter: blur(12px); animation: mascot-note-in 260ms cubic-bezier(.22, 1, .36, 1) both; }
+.mascot-note::after { content: ""; position: absolute; right: -7px; bottom: 10px; width: 13px; height: 13px; border-right: 1px solid rgba(120, 139, 153, .4); border-bottom: 1px solid rgba(120, 139, 153, .4); background: var(--surface); transform: rotate(-45deg); }
+.mascot-note p { margin: 0; color: var(--ink); font-size: 13px; line-height: 1.7; letter-spacing: .02em; }
+.mascot-note button { position: absolute; z-index: 1; right: 8px; top: 6px; border: 0; background: transparent; color: var(--dusty-blue); font-size: 18px; line-height: 1; cursor: pointer; }
+.mascot-tuck { position: absolute; z-index: 5; right: -4px; bottom: 25px; display: grid; width: 27px; height: 38px; place-items: center; border: 1px solid rgba(120,139,153,.4); border-left: 0; border-radius: 0 10px 10px 0; background: color-mix(in srgb, var(--surface) 91%, transparent); color: var(--dusty-blue); box-shadow: 5px 5px 12px rgba(53,67,74,.08); cursor: pointer; transition: width 180ms ease, color 180ms ease, background 180ms ease; }
+.mascot-tuck::before { content: ""; position: absolute; left: -5px; top: 8px; width: 5px; height: 20px; border-top: 1px solid rgba(120,139,153,.4); border-bottom: 1px solid rgba(120,139,153,.4); background: var(--surface); }
+.mascot-tuck span { transform: translateY(-2px); font-size: 17px; transition: transform 180ms ease; }
+.mascot-tuck:hover { width: 32px; color: var(--ink); background: var(--surface-muted); }
+.mascot-tuck:hover span { transform: translateY(1px); }
+.mascot-return { position: fixed; z-index: 70; right: 18px; bottom: 18px; width: 42px; height: 42px; border: 1px solid rgba(120, 139, 153, .45); border-radius: 50% 50% 42% 42%; background: var(--surface); color: var(--dusty-blue); box-shadow: 0 8px 24px rgba(53, 67, 74, .12); cursor: pointer; transition: transform 180ms ease, background 180ms ease; }
+.mascot-return::before, .mascot-return::after { content: ""; position: absolute; top: -4px; width: 13px; height: 13px; border: 1px solid rgba(120, 139, 153, .45); background: var(--surface); transform: rotate(45deg); }
+.mascot-return::before { left: 5px; border-right: 0; border-bottom: 0; }
+.mascot-return::after { right: 5px; border-left: 0; border-top: 0; }
+.mascot-return:hover { transform: translateY(-3px) rotate(-3deg); background: var(--surface-muted); }
+.mascot-return span { position: relative; z-index: 1; font-size: 11px; }
+@keyframes mascot-note-in { from { opacity: 0; transform: translate(8px, 6px) scale(.96); } to { opacity: 1; transform: translate(0) scale(1); } }
+@keyframes mascot-ear-twitch { 0%, 78%, 86%, 100% { transform: rotate(0); } 80% { transform: rotate(-1.8deg); } 82% { transform: rotate(1.4deg); } 84% { transform: rotate(-.7deg); } }
+@keyframes mascot-fringe-soften { 0%, 100% { transform: translateX(-.4px); } 50% { transform: translateX(.7px) rotate(.35deg); } }
+@keyframes mascot-tail-wag { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(4deg); } }
+
+@media (max-width: 767px) {
+  .mascot { width: 128px; right: 4px; bottom: 5px; }
+  .mascot-note { right: 100px; bottom: 82px; width: min(190px, calc(100vw - 140px)); }
+  .mascot-tuck { right: -3px; bottom: 16px; width: 24px; height: 32px; }
+}
+
 .page-intro { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
 .surface-card { border-bottom: 1px solid var(--border); background: transparent; }
 
@@ -99,4 +136,5 @@ button {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   .reveal { opacity: 1; transform: none; }
+  .mascot-detail, .mascot-note { animation: none; }
 }
